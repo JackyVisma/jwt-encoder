@@ -30,9 +30,67 @@
     </style>
 </head>
     
+        <?php
+        
+        require_once 'php-jwt/src/JWT.php';
+        require_once 'php-jwt/src/BeforeValidException.php';
+        require_once 'php-jwt/src/SignatureInvalidException.php';
+        require_once 'php-jwt/src/ExpiredException.php';
+		use Firebase\JWT\JWT;
     
+        $key = "example_key";
+        if(!empty($_POST['jwtString'])){
+            $infoJWT = $_POST['jwtString'];
+            //var_dump($infoJWT);
+            
+            $decoded = JWT::decode($infoJWT, $key, array('HS256'));
+
+            print_r($decoded);
+            $decoded_array = (array) $decoded;
+            var_dump($decoded_array);
+            var_dump($jwt);
+        }
+        else{
+          $infoJWT = "";  
+        }
+        
+        if(!empty($_POST['jwtJSON'])){
+            $infoJSON = $_POST['jwtJSON'];
+            $jwt = JWT::encode($infoJSON, $key);
+            
+        }
+        else{
+            $infoJSON = "";
+        }
+    
+    ?>
 <body>
-    <center><h1>jwt Decode/Encode</h1></center>
+    <?php
+        
+        echo '<center><h1>jwt Decode/Encode</h1></center>';
+        echo '<div id="encoded">';
+            echo '<center><h3>Encoded</h3></center>';
+            echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post">';
+                echo '<textarea rows="20" cols="77" name="jwtString">'.$infoJWT.'</textarea><br>';
+                echo '<input type="submit" value="Decode">';
+            echo '</form>';
+        echo '</div>';
+        echo '<div id="decoded">';
+            echo '<center><h3>Decoded</h3></center>';
+            echo '<form id="form2" action="http://localhost:8081/jwt-encoder/" method="post">';
+                echo '<p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>';
+                echo '<textarea readonly rows="8" cols="77" ></textarea><br>';
+                echo '<p>PAYLOAD:DATA</p>';
+                echo '<textarea rows="8" cols="77" name="jwtJSON"></textarea><br>';
+                echo '<p>VERIFY SIGNATURE</p>';
+                echo '<textarea readonly rows="8" cols="77" ></textarea><br>';
+                echo '<input type="submit" value="Encode">';
+            echo '</form>';
+        echo '</div>';
+            
+    ?>
+    
+    <!--<center><h1>jwt Decode/Encode</h1></center>
     <div id="encoded">
         <center><h3>Encoded</h3></center>
         <form id="form1" >
@@ -51,43 +109,9 @@
             <textarea rows="8" cols="77" id="jwtJSON3"></textarea><br>
         </form>
     </div>
-    
-    
-    <?php
-        
-        require_once 'php-jwt/src/JWT.php';
-        require_once 'php-jwt/src/BeforeValidException.php';
-        require_once 'php-jwt/src/SignatureInvalidException.php';
-        require_once 'php-jwt/src/ExpiredException.php';
-		use Firebase\JWT\JWT;
+    -->
     
 
-        $key = "example_key";
-        $token = array(
-            "iss" => "http://example.org",
-            "aud" => "http://example.com",
-            "iat" => 1356999524,
-            "nbf" => 1357000000
-        );
-
-        /**
-         * IMPORTANT:
-         * You must specify supported algorithms for your application. See
-         * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
-         * for a list of spec-compliant algorithms.
-         */
-        $jwt = JWT::encode($token, $key);
-        var_dump($jwt);
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
-
-        print_r($decoded);
-        
-
-        $decoded_array = (array) $decoded;
-       
-        var_dump($decoded_array);
-        
-    ?>
     
     
 </body>
