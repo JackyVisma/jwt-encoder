@@ -7,9 +7,8 @@
         
         #encoded{
             position: absolute;
-            top: 10%;
+            top: 50%;
             background-color: antiquewhite;
-            
             padding-left: 10px;
             padding-right: 10px;
 
@@ -17,7 +16,7 @@
         
         #decoded{
             position: absolute;
-            top: 10%;
+            top: 30%;
             left: 60%;
             background-color: bisque;
             padding-left: 10px;
@@ -44,7 +43,7 @@
     <div id="decoded">
         <center><h3>Decoded</h3></center>
         <form id="form2">
-            <p>HEADER:ALGORITHM & TOKEN TYPE</p>
+            <p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>
             <textarea rows="8" cols="77" id="jwtJSON1"></textarea><br>
             <p>PAYLOAD:DATA</p>
             <textarea rows="8" cols="77" id="jwtJSON2"></textarea><br>
@@ -52,6 +51,47 @@
             <textarea rows="8" cols="77" id="jwtJSON3"></textarea><br>
         </form>
     </div>
+    
+    
+    <?php
+        
+        require_once 'php-jwt/src/JWT.php';
+        require_once 'php-jwt/src/BeforeValidException.php';
+        require_once 'php-jwt/src/SignatureInvalidException.php';
+        require_once 'php-jwt/src/ExpiredException.php';
+		use Firebase\JWT\JWT;
+    
+
+        $key = "example_key";
+        $token = array(
+            "iss" => "http://example.org",
+            "aud" => "http://example.com",
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        /**
+         * IMPORTANT:
+         * You must specify supported algorithms for your application. See
+         * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
+         * for a list of spec-compliant algorithms.
+         */
+        $jwt = JWT::encode($token, $key);
+        var_dump($jwt);
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        print_r($decoded);
+        
+
+        $decoded_array = (array) $decoded;
+       
+        var_dump($decoded_array);
+        
+    ?>
+    
+    
 </body>
 
+    
+    
 </html>
