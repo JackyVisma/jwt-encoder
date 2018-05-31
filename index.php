@@ -7,8 +7,8 @@
         
         #encoded{
             position: absolute;
-            top: 50%;
-            background-color: antiquewhite;
+            top: 30%;
+            background-color: bisque;
             padding-left: 10px;
             padding-right: 10px;
 
@@ -38,14 +38,19 @@
         require_once 'php-jwt/src/ExpiredException.php';
 		use Firebase\JWT\JWT;
     
-        $key = "example_key";
-        if(!empty($_POST['jwtString'])){
-            $infoJWT = $_POST['jwtString'];
-            //var_dump($infoJWT);
-                $tks = explode('.', $infoJWT);
-                list($headb64, $payload, $cryptob64) = $tks;
-            $decoded = JWT::jsonDecode(JWT::urlsafeB64Decode($payload));
-            //$decoded = JWT::decode($infoJWT, $key, array('HS256'));
+        if(!empty($_POST['infoJWT'])){
+            
+            $infoJWT = $_POST['infoJWT'];
+            
+            $stringJWT = $infoJWT["jwtString"];
+            $key = $infoJWT["jwtKey"];
+            
+
+            /*$tks = explode('.', $infoJWT);
+            list($headb64, $payload, $cryptob64) = $tks;
+            $decoded = JWT::jsonDecode(JWT::urlsafeB64Decode($payload));*/
+            
+            $decoded = JWT::decode($stringJWT, $key, array('HS256'));
 
             print_r($decoded);
             $jwt = JWT::encode($decoded, $key);
@@ -53,19 +58,27 @@
         }
         else{
           $infoJWT = "";
+          $key = "";
           $jwt = "";
           $decoded = "";
         }
         
         if(!empty($_POST['jwtJSON'])){
             $infoJSON = $_POST['jwtJSON'];
-            var_dump($infoJSON);
+            $infoJSON_array = (array) $infoJSON;
+            var_dump($infoJSON_array);
+            $res = openssl_pkey_new($infoJSON_array);
+            var_dump($res);
+            $key = openssl_get_publickey($res);
+            var_dump($key);
             $jwt = JWT::encode($infoJSON, $key);
+            
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             print_r($decoded);
         }
         else{
             $infoJSON = "";
+            $key = "";
             $jwt = "";
             $decoded = "";
         }
@@ -78,7 +91,9 @@
         echo '<div id="encoded">';
             echo '<center><h3>Encoded</h3></center>';
             echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post">';
-                echo '<textarea rows="20" cols="77" name="jwtString">'.$jwt.'</textarea><br>';
+                echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
+                echo '<p>Inserisci Public Key</p>';
+                echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
                 echo '<input type="submit" value="Decode">';
             echo '</form>';
         echo '</div>';
