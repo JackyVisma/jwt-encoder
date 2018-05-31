@@ -42,25 +42,32 @@
         if(!empty($_POST['jwtString'])){
             $infoJWT = $_POST['jwtString'];
             //var_dump($infoJWT);
-            
-            $decoded = JWT::decode($infoJWT, $key, array('HS256'));
+                $tks = explode('.', $infoJWT);
+                list($headb64, $payload, $cryptob64) = $tks;
+            $decoded = JWT::jsonDecode(JWT::urlsafeB64Decode($payload));
+            //$decoded = JWT::decode($infoJWT, $key, array('HS256'));
 
             print_r($decoded);
-            $decoded_array = (array) $decoded;
-            var_dump($decoded_array);
-            var_dump($jwt);
+            $jwt = JWT::encode($decoded, $key);
+            
         }
         else{
-          $infoJWT = "";  
+          $infoJWT = "";
+          $jwt = "";
+          $decoded = "";
         }
         
         if(!empty($_POST['jwtJSON'])){
             $infoJSON = $_POST['jwtJSON'];
+            var_dump($infoJSON);
             $jwt = JWT::encode($infoJSON, $key);
-            
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            print_r($decoded);
         }
         else{
             $infoJSON = "";
+            $jwt = "";
+            $decoded = "";
         }
     
     ?>
@@ -71,7 +78,7 @@
         echo '<div id="encoded">';
             echo '<center><h3>Encoded</h3></center>';
             echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post">';
-                echo '<textarea rows="20" cols="77" name="jwtString">'.$infoJWT.'</textarea><br>';
+                echo '<textarea rows="20" cols="77" name="jwtString">'.$jwt.'</textarea><br>';
                 echo '<input type="submit" value="Decode">';
             echo '</form>';
         echo '</div>';
@@ -81,7 +88,7 @@
                 echo '<p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>';
                 echo '<textarea readonly rows="8" cols="77" ></textarea><br>';
                 echo '<p>PAYLOAD:DATA</p>';
-                echo '<textarea rows="8" cols="77" name="jwtJSON"></textarea><br>';
+                echo '<textarea rows="8" cols="77" name="jwtJSON">'.$decoded.'</textarea><br>';
                 echo '<p>VERIFY SIGNATURE</p>';
                 echo '<textarea readonly rows="8" cols="77" ></textarea><br>';
                 echo '<input type="submit" value="Encode">';
