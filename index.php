@@ -67,22 +67,28 @@
             $infoJWT = $_POST['infoJWT'];
             
             $key = $infoJWT["jwtKey"];
-            
+            var_dump($key);
             if($key == ''){
                 $key = "example_key";
             }
+            var_dump($key);
             
+            $prova = base64_decode($infoJWT["jwtString"]);
+            var_dump($prova);
+            $algorithm = substr($prova, 8,5);
+            var_dump($algorithm);
             /*$tks = explode('.', $infoJWT);
             list($headb64, $payload, $cryptob64) = $tks;
             $decoded = JWT::jsonDecode(JWT::urlsafeB64Decode($payload));*/
             try{
                 
-                $decoded = JWT::decode($infoJWT["jwtString"], $key, array('HS256'));
+                $decoded = JWT::decode($infoJWT["jwtString"], $key, array($algorithm));
 
                 print_r($decoded);
                 $jwt = JWT::encode($decoded, $key);
             }
             catch(Exception $e) {
+                var_dump($e);
                 echo 'Signature Verification Failed';
                 
             }
