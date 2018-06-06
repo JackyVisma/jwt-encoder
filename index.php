@@ -48,9 +48,9 @@
     </style>
     
     <script>
-    
+        
         function show(){
-           
+            
             if(document.getElementById("select").value == "RS256"){
                 document.getElementById("chiavi").style.display = "block";
             }
@@ -58,19 +58,21 @@
                 document.getElementById("chiavi").style.display = "none"; 
             }
         }
-        
+       
         function clickCounter() {
             if(typeof(Storage) !== "undefined") {
+
                 if (localStorage.clickcount) {
                     localStorage.clickcount = Number(localStorage.clickcount)+1;
                 } else {
                     localStorage.clickcount = 1;
                 }
-                alert(localStorage.clickcount);
-                document.getElementById("numberD_E").innerHTML = "You have encoded/decodec " + localStorage.clickcount + " time(s).";
             } else {
                 document.getElementById("numberD_E").innerHTML = "Sorry, your browser does not support web storage...";
             }
+        }
+        function printCounter(){
+            document.getElementById("numberD_E").innerHTML = "You have encoded/decodec " + Number(localStorage.clickcount) + " time(s).";
         }
     </script>
 </head>
@@ -175,7 +177,7 @@
         }
     
     ?>
-<body onload="clickCounter()">
+<body onload="printCounter()">
     <?php
         
         echo '<center><h1>jwt Decode/Encode</h1></center>';
@@ -196,7 +198,7 @@
                 echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
                 echo '<p>Inserisci Public Key</p>';
                 echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
-                echo '<input type="submit" value="Decode">';
+                echo '<input type="submit" value="Decode" onclick="clickCounter()">';
             echo '</form>';
         echo '</div>';
         echo '<div id="decoded">';
@@ -208,7 +210,7 @@
                 echo '<textarea rows="8" cols="77" name="jwtJSON[payload]">'.$decoded.'</textarea><br>';
                 echo '<p>VERIFY SIGNATURE</p>';
                 echo '<textarea readonly rows="4" cols="77" ></textarea><br>';
-                echo '<input type="submit" value="Encode">';
+                echo '<input type="submit" value="Encode" onclick="clickCounter()">';
                 echo '<div id="chiavi">';
                     echo '<p>Inserisci chiave pubblica</p>';
                     echo '<textarea rows="4" cols="77" name="jwtJSON[publicKey]">'.$publicKey.'</textarea><br>';
@@ -216,7 +218,6 @@
                     echo '<textarea rows="4" cols="77" name="jwtJSON[privateKey]">'.$privateKey.'</textarea><br>';
                 echo '</div>';
             echo '</form>';
-        echo '</div>';
         echo '<div id="counter">';
         echo '<p id="numberD_E"></p>';
         echo '</div>';
