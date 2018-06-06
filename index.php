@@ -41,7 +41,7 @@
         #counter{
             position: absolute;
             top: 120%;
-            left: 48%;
+            left: 40%;
             
         }
     
@@ -60,9 +60,7 @@
         }
         
         function clickCounter() {
-            alert("ciao");
             if(typeof(Storage) !== "undefined") {
-                alert("ciao3");
                 if (localStorage.clickcount) {
                     localStorage.clickcount = Number(localStorage.clickcount)+1;
                 } else {
@@ -71,7 +69,6 @@
                 alert(localStorage.clickcount);
                 document.getElementById("numberD_E").innerHTML = "You have encoded/decodec " + localStorage.clickcount + " time(s).";
             } else {
-                alert("ciao2");
                 document.getElementById("numberD_E").innerHTML = "Sorry, your browser does not support web storage...";
             }
         }
@@ -178,7 +175,7 @@
         }
     
     ?>
-<body>
+<body onload="clickCounter()">
     <?php
         
         echo '<center><h1>jwt Decode/Encode</h1></center>';
@@ -195,23 +192,23 @@
         echo '</div>';
         echo '<div id="encoded">';
             echo '<center><h3>Encoded</h3></center>';
-            echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post">';
+            echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post" >';
                 echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
                 echo '<p>Inserisci Public Key</p>';
                 echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
-                echo '<input type="submit" value="Decode" onclick="clickCounter()">';
+                echo '<input type="submit" value="Decode">';
             echo '</form>';
         echo '</div>';
         echo '<div id="decoded">';
             echo '<center><h3>Decoded</h3></center>';
-            echo '<form id="form2" action="http://localhost:8081/jwt-encoder/" method="post">';
+            echo '<form id="form2" action="http://localhost:8081/jwt-encoder/" method="post" onload="clickCounter()">';
                 echo '<p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>';
                 echo '<textarea readonly rows="4" cols="77" ></textarea><br>';
                 echo '<p>PAYLOAD:DATA</p>';
                 echo '<textarea rows="8" cols="77" name="jwtJSON[payload]">'.$decoded.'</textarea><br>';
                 echo '<p>VERIFY SIGNATURE</p>';
                 echo '<textarea readonly rows="4" cols="77" ></textarea><br>';
-                echo '<input type="submit" value="Encode" onclick="clickCounter()">';
+                echo '<input type="submit" value="Encode">';
                 echo '<div id="chiavi">';
                     echo '<p>Inserisci chiave pubblica</p>';
                     echo '<textarea rows="4" cols="77" name="jwtJSON[publicKey]">'.$publicKey.'</textarea><br>';
