@@ -218,7 +218,7 @@ class JWT
      *
      * @throws DomainException Invalid Algorithm or OpenSSL failure
      */
-    private static function verify($msg, $signature, $key, $alg)
+    public static function verify($msg, $signature, $key, $alg)
     {
         if (empty(static::$supported_algs[$alg])) {
             throw new DomainException('Algorithm not supported');

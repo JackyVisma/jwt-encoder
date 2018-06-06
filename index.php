@@ -84,7 +84,14 @@
         require_once 'php-jwt/src/SignatureInvalidException.php';
         require_once 'php-jwt/src/ExpiredException.php';
 		use Firebase\JWT\JWT;
-    
+
+        $infoJSON = "";
+        $key = "";
+        $publicKey = "";
+        $privateKey = "";
+        $jwt = "";
+        $decoded = "";
+
         if(!empty($_POST['infoJWT'])){
             $infoJWT = $_POST['infoJWT'];
             
@@ -98,25 +105,14 @@
             $tks = explode('.', $infoJWT["jwtString"]);
             list($headb64, $payload, $cryptob64) = $tks;
             $algoritmo = JWT::jsonDecode(JWT::urlsafeB64Decode($headb64));
+            $decoded = JWT::urlsafeB64Decode($payload);
+
             try{
-
-                $decoded = JWT::decode($infoJWT["jwtString"], $key, array($algoritmo->alg));
-
-
-                $jwt = $infoJWT["jwtString"];
+                $valid = JWT::verify("$headb64.$payload",JWT::urlsafeB64Decode($cryptob64),$key,$algoritmo->alg);
+            }catch (Exception $e){
+                $valid = false;
             }
-            catch(Exception $e) {
-                var_dump($e);
-                echo 'Signature Verification Failed';
-                
-            }
-            
-        }
-        else{
-          $infoJWT = "";
-          $key = "";
-          $jwt = "";
-          $decoded = "";
+            $jwt = $infoJWT["jwtString"];
         }
         
         if(!empty($_POST['jwtJSON'])){
@@ -167,14 +163,6 @@
             $key = openssl_get_publickey($res);
             */
         }
-        else{
-            $infoJSON = "";
-            $key = "";
-            $publicKey = "";
-            $privateKey = "";
-            $jwt = "";
-            $decoded = "";
-        }
     
     ?>
 <body onload="printCounter()">
@@ -194,16 +182,17 @@
         echo '</div>';
         echo '<div id="encoded">';
             echo '<center><h3>Encoded</h3></center>';
-            echo '<form id="form1" action="http://localhost:8081/jwt-encoder/" method="post" >';
+            echo '<form id="form1"  method="post" >';
                 echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
                 echo '<p>Inserisci Public Key</p>';
                 echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
                 echo '<input type="submit" value="Decode" onclick="clickCounter()">';
+                echo '<p>'.($valid? "Valid": "Signature Invalid").'</p>';
             echo '</form>';
         echo '</div>';
         echo '<div id="decoded">';
             echo '<center><h3>Decoded</h3></center>';
-            echo '<form id="form2" action="http://localhost:8081/jwt-encoder/" method="post" onload="clickCounter()">';
+            echo '<form id="form2"  method="post" onload="clickCounter()">';
                 echo '<p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>';
                 echo '<textarea readonly rows="4" cols="77" ></textarea><br>';
                 echo '<p>PAYLOAD:DATA</p>';
