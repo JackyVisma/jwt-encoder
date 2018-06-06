@@ -9,8 +9,8 @@
         }
         #encoded{
             position: absolute;
-            top: 40%;
-            left: 5%;
+            top: 25%;
+            left: 2%;
             background-color: bisque;
             padding-left: 10px;
             padding-right: 10px;
@@ -19,8 +19,8 @@
         
         #decoded{
             position: absolute;
-            top: 40%;
-            left: 60%;
+            top: 25%;
+            left: 55%;
             background-color: bisque;
             padding-left: 10px;
             padding-right: 10px;
@@ -38,6 +38,12 @@
         #chiavi{
             display: none;
         }
+        #counter{
+            position: absolute;
+            top: 120%;
+            left: 48%;
+            
+        }
     
     </style>
     
@@ -50,6 +56,23 @@
             }
             else{
                 document.getElementById("chiavi").style.display = "none"; 
+            }
+        }
+        
+        function clickCounter() {
+            alert("ciao");
+            if(typeof(Storage) !== "undefined") {
+                alert("ciao3");
+                if (localStorage.clickcount) {
+                    localStorage.clickcount = Number(localStorage.clickcount)+1;
+                } else {
+                    localStorage.clickcount = 1;
+                }
+                alert(localStorage.clickcount);
+                document.getElementById("numberD_E").innerHTML = "You have encoded/decodec " + localStorage.clickcount + " time(s).";
+            } else {
+                alert("ciao2");
+                document.getElementById("numberD_E").innerHTML = "Sorry, your browser does not support web storage...";
             }
         }
     </script>
@@ -67,25 +90,21 @@
             $infoJWT = $_POST['infoJWT'];
             
             $key = $infoJWT["jwtKey"];
-            var_dump($key);
+
             if($key == ''){
                 $key = "example_key";
             }
-            var_dump($key);
-            
-            $prova = base64_decode($infoJWT["jwtString"]);
-            var_dump($prova);
-            $algorithm = substr($prova, 8,5);
-            var_dump($algorithm);
-            /*$tks = explode('.', $infoJWT);
-            list($headb64, $payload, $cryptob64) = $tks;
-            $decoded = JWT::jsonDecode(JWT::urlsafeB64Decode($payload));*/
-            try{
-                
-                $decoded = JWT::decode($infoJWT["jwtString"], $key, array($algorithm));
 
-                print_r($decoded);
-                $jwt = JWT::encode($decoded, $key);
+
+            $tks = explode('.', $infoJWT["jwtString"]);
+            list($headb64, $payload, $cryptob64) = $tks;
+            $algoritmo = JWT::jsonDecode(JWT::urlsafeB64Decode($headb64));
+            try{
+
+                $decoded = JWT::decode($infoJWT["jwtString"], $key, array($algoritmo->alg));
+
+
+                $jwt = $infoJWT["jwtString"];
             }
             catch(Exception $e) {
                 var_dump($e);
@@ -180,7 +199,7 @@
                 echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
                 echo '<p>Inserisci Public Key</p>';
                 echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
-                echo '<input type="submit" value="Decode">';
+                echo '<input type="submit" value="Decode" onclick="clickCounter()">';
             echo '</form>';
         echo '</div>';
         echo '<div id="decoded">';
@@ -192,7 +211,7 @@
                 echo '<textarea rows="8" cols="77" name="jwtJSON[payload]">'.$decoded.'</textarea><br>';
                 echo '<p>VERIFY SIGNATURE</p>';
                 echo '<textarea readonly rows="4" cols="77" ></textarea><br>';
-                echo '<input type="submit" value="Encode">';
+                echo '<input type="submit" value="Encode" onclick="clickCounter()">';
                 echo '<div id="chiavi">';
                     echo '<p>Inserisci chiave pubblica</p>';
                     echo '<textarea rows="4" cols="77" name="jwtJSON[publicKey]">'.$publicKey.'</textarea><br>';
@@ -200,6 +219,9 @@
                     echo '<textarea rows="4" cols="77" name="jwtJSON[privateKey]">'.$privateKey.'</textarea><br>';
                 echo '</div>';
             echo '</form>';
+        echo '</div>';
+        echo '<div id="counter">';
+        echo '<p id="numberD_E"></p>';
         echo '</div>';
             
     ?>
