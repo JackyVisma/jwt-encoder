@@ -5,44 +5,89 @@
     
     <style>
         body{
-            background-color: lightcyan;
+            background-color: #808080;
         }
+        h1 { 
+            color: black; 
+            font-family: 'Lato', sans-serif; 
+            font-size: 45px; 
+            font-weight: 300; 
+            line-height: 58px; 
+            margin: 0 0 58px; 
+        }
+
         #encoded{
             position: absolute;
-            top: 25%;
-            left: 2%;
-            background-color: bisque;
+            top: 15%;
+            left: 1%;
+            background-color: #E6E6E6;
             padding-left: 10px;
             padding-right: 10px;
-
+            border-radius: 10px;
+            width: auto;
+            height: auto;
         }
-        
+        #encoded h3{
+            background-color: #9F9FFF;
+            padding-top: 15px;
+            margin-top: 5px;
+            height: 40px;
+            border-radius: 10px; 
+        }
+       
         #decoded{
             position: absolute;
-            top: 25%;
+            top: 14%;
             left: 55%;
-            background-color: bisque;
+            background-color: #E6E6E6;
             padding-left: 10px;
             padding-right: 10px;
+            border-radius: 10px;
+            width: auto;
+            height: auto;
         }
-        #jwtJSON3{
-            background-color: #F0F0F0;
-            color: #00b9f1;
+        #decoded h3{
+            background-color: #9F9FFF;
+            padding-top: 15px;
+            margin-top: 5px;
+            height: 40px;
+            border-radius: 10px;
+        }
+        
+        #decoded p{
+            padding: 0px;
+            margin-top: 5px;
+        }
+         #form2{
+            padding-top: 0; 
         }
         #formAlgorithm{
             position: absolute;
-            left: 45%;
+            left: 44%;
             top: 10%;
-            background-color: bisque;
+            padding: 5px;
+            width: auto;
+            height: auto;
+            background-color: #CCCCCC;
+            border-radius: 10px;
         }
         #chiavi{
             display: none;
         }
         #counter{
             position: absolute;
-            top: 120%;
-            left: 40%;
+            bottom: 0;
+            left: 0%;
+            width: 100%;
+            height: auto;
+            background-color: darkgrey;
+            text-align: center;
             
+        }
+        #counter p{
+            color: black;
+            font-size: 20;
+            font-style: italic;
         }
     
     </style>
@@ -72,7 +117,7 @@
             }
         }
         function printCounter(){
-            document.getElementById("numberD_E").innerHTML = "You have encoded/decodec " + Number(localStorage.clickcount) + " time(s).";
+            document.getElementById("numberD_E").innerHTML = "You have encoded/decoded " + Number(localStorage.clickcount) + " time(s).";
         }
     </script>
 </head>
@@ -183,7 +228,7 @@
         echo '<div id="encoded">';
             echo '<center><h3>Encoded</h3></center>';
             echo '<form id="form1"  method="post" >';
-                echo '<textarea rows="20" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
+                echo '<textarea rows="12" cols="77" name="infoJWT[jwtString]">'.$jwt.'</textarea><br>';
                 echo '<p>Inserisci Public Key</p>';
                 echo '<textarea rows="8" cols="77" name="infoJWT[jwtKey]">'.$key.'</textarea><br>';
                 echo '<input type="submit" value="Decode" onclick="clickCounter()">';
@@ -207,36 +252,14 @@
                     echo '<textarea rows="4" cols="77" name="jwtJSON[privateKey]">'.$privateKey.'</textarea><br>';
                 echo '</div>';
             echo '</form>';
+        echo '</div>';
         echo '<div id="counter">';
         echo '<p id="numberD_E"></p>';
         echo '</div>';
-            
+    
+        
+    
     ?>
-    
-    <!--<center><h1>jwt Decode/Encode</h1></center>
-    <div id="encoded">
-        <center><h3>Encoded</h3></center>
-        <form id="form1" >
-            <textarea rows="20" cols="77" id="jwtString"></textarea><br>
-            <input type="submit" value="Invia">
-        </form>
-    </div>
-    <div id="decoded">
-        <center><h3>Decoded</h3></center>
-        <form id="form2">
-            <p>HEADER:ALGORITHM &#38; TOKEN TYPE</p>
-            <textarea rows="8" cols="77" id="jwtJSON1"></textarea><br>
-            <p>PAYLOAD:DATA</p>
-            <textarea rows="8" cols="77" id="jwtJSON2"></textarea><br>
-            <p>VERIFY SIGNATURE</p>
-            <textarea rows="8" cols="77" id="jwtJSON3"></textarea><br>
-        </form>
-    </div>
-    -->
-    
-
-    
-    
 </body>
 
     
